@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <form method="POST">
+            {% csrf_token %}
+            {{blog_form.as_p}}
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <h2>All Blog Posts</h2>
+    <div>
+        {% if blogs %}
+            <table border="1">
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Author</th>
+                    <th>Created</th>
+                    <th>Updated</th>
+                </tr>
+                {% for blog in blogs %}
+                <tr>
+                    <td>{{ blog.title }}</td>
+                    <td>{{ blog.description|truncatewords:20 }}</td>
+                    <td>{{ blog.author.username }}</td>
+                    <td>{{ blog.created_at }}</td>
+                    <td>{{ blog.updated_at }}</td>
+                    <td><a href="{% url 'update' blog.id %}"><button type="submit">Update</button></a></td>
+                    <td><a href="{% url 'delete' blog.id %}"><button type="submit">Delete</button></a></td>
+
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No blog posts yet. Create the first one!</p>
+        {% endif %}
+    </div>
+</body>
+</html>
