@@ -9,11 +9,18 @@ from django.contrib.auth.decorators import login_required
 # from django.contrib.auth.models import User
 # Create your views here.
 class UserSignUpView(View):
-    
     def get(self,request):
+        if request.user.is_authenticated:
+            messages.info(request,'You are already logged in')
+            return redirect('home')
         signup_form = UserSignUp()
         return render(request,'signup.html',{'signup_form':signup_form})
+
+
+
     def post(self,request):
+        if request.user.is_authenticated:
+            return redirect('home')
         user_signup = UserSignUp(request.POST)
         if user_signup.is_valid():
             user =user_signup.save()
@@ -29,9 +36,17 @@ class UserSignUpView(View):
 
 class UserLoginView(View):
     def get(self,request):
+        if request.user.is_authenticated:
+            return redirect('home')
+
         userlogin_form= UserLogin()
         return render(request,'login.html',{'userlogin_form':userlogin_form})
+    
     def post(self,request):
+
+        if request.user.is_authenticated:
+            return redirect('home')
+            
         form = UserLogin(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -45,7 +60,9 @@ class UserLoginView(View):
                 messages.error(request,'Invalid credentials')
         return render(request,'login.html',{'userlogin_form':form})
 
-
+@login_required
 def logout_view(request):
+    user_name = request.user.get_full_name() or request.user.username
+    request.sessions.flush()
     logout(request)
     return redirect('login')
