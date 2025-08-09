@@ -4,9 +4,13 @@ from .forms import BlogForm
 from django.views import View
 from.models import BlogData
 from user_auth.models import UserData
-# Create your views here.
-class Home(View):
+from rest_framework.response import Response
+from .serializers import BlogSerializer,BlogCreateUpdateSerializer
+from rest_framework.decorators import action
+from rest_framework import viewsets,status
+from rest_framework.permissions import IsAuthenticated
 
+class Home(View):
     def get(self,request):
         blog_form = BlogForm()
         blog= BlogData.objects.all().order_by('-created_at')
@@ -65,3 +69,4 @@ class DeleteBlog(View):
         blog = get_object_or_404(BlogData, id=blog_id, author=request.user)
         blog.delete()
         return redirect('home')
+

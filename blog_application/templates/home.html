@@ -6,6 +6,12 @@
     <title>Document</title>
 </head>
 <body>
+    <div style="text-align: right; margin: 10px;">
+        <span>Welcome, {{ user.username }}!</span>
+        <a href="{% url 'logout' %}">
+            <button type="button">Logout</button>
+        </a>
+    </div>
     <div>
         <form method="POST">
             {% csrf_token %}

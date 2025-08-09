@@ -15,10 +15,42 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from blog_application.api_views import BlogViewSet
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework import permissions
+
+# Swagger configuration
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Blog API",
+        default_version='v1',
+        description="A simple blog API with authentication",
+        contact=openapi.Contact(email="your-email@example.com"),
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+)
+
+# DRF Router
+router = DefaultRouter()
+router.register(r'blogs', BlogViewSet, basename='blog')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('blog_application.urls')),
-    path('user/',include('user_auth.urls')),
+    
+    # Web views (your existing templates)
+    path('auth/', include('user_auth.urls')),
+    path('', include('blog_application.urls')),
+    
+    # API endpoints
+    path('api/auth/', include('user_auth.api_urls')),
+    path('api/', include(router.urls)),
+    
+    # Swagger documentation
+    path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]

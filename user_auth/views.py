@@ -5,9 +5,9 @@ from django.http import HttpResponse
 from .forms import UserSignUp,UserLogin
 from django.contrib import messages
 from .models import UserData
+from django.contrib.auth.decorators import login_required
 # from django.contrib.auth.models import User
 # Create your views here.
-
 class UserSignUpView(View):
     
     def get(self,request):
@@ -44,3 +44,8 @@ class UserLoginView(View):
             else:
                 messages.error(request,'Invalid credentials')
         return render(request,'login.html',{'userlogin_form':form})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')

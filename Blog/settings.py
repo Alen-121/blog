@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'blog_application',
     'user_auth',
     'rest_framework',
+    # 'rest_framework.authtoken',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +85,12 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
+
+#rest framework pagination
+REST_FRAMEWORK ={
+    'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE':5
 }
 
 
