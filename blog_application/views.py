@@ -35,15 +35,17 @@ class UpdateBlog(View):
         if not request.user.is_authenticated:
             return redirect('login')
         blog = get_object_or_404(BlogData,id=blog_id,author=request.user)
-        blog_form = BlogForm()
+        blog_form = BlogForm(instance=blog)
         return render(request,'update.html',{'blog_form': blog_form, 'blog': blog})
     def post(self,request,blog_id):
         if not request.user.is_authenticated:
             return redirect('login')
-        blog = get_object_or_404(BlogForm,id=blog_id,author=request.user)
-        blog_form = BlogForm(request.POST)
+        blog = get_object_or_404(BlogData,id=blog_id,author=request.user)
+        blog_form = BlogForm(request.POST,instance=blog)
         if blog_form.is_valid():
-            blog_form.save()
+            update_blog = blog_form.save(commit=False)
+            update_blog.author = request.user
+            update_blog.save()
             return redirect('home')
         return render(request,'update.html',{'blog_form': blog_form, 'blog': blog})
 
