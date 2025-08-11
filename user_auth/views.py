@@ -63,6 +63,6 @@ class UserLoginView(View):
 @login_required
 def logout_view(request):
     user_name = request.user.get_full_name() or request.user.username
-    request.sessions.flush()
+    request.session.flush()
     logout(request)
     return redirect('login')

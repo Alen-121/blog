@@ -41,7 +41,7 @@ router.register(r'blogs', BlogViewSet, basename='blog')
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    # Web views (your existing templates)
+    # Web views 
     path('auth/', include('user_auth.urls')),
     path('', include('blog_application.urls')),
     
